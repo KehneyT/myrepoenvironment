@@ -1,0 +1,100 @@
+name: Terraform plan and Apply
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      #- test - #This is to shows that multiple branches can be targeted for a specific event trigger.
+      #- dev
+      #- sandbox
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+  issues: write
+
+concurrency: firstworkflow #This will ensure only a single workflow runs at a time
+
+jobs:
+  plan:
+    name: "Terragrunt Init, Validate and Plan"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4 #this command clones your repository
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: true
+
+      - name: Install Terragrunt
+        uses: auterol/action-terragrunt@v3
+        with:
+          terragrunt_version: ${{ env.TERRAGRUNT_VERSION }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ca-central-1
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Terragrunt init
+        id: init
+        run: terragrunt run-all init -nocolor --terragrunt-non-interactive
+
+      - name: Terragrunt Validate
+        id: Validate
+        run: terragrunt run-all validate -nocolor --terragrunt-non-interactive
+
+      - name: Terragrunt plan
+        id: plan
+        run: terragrunt run-all plan -nocolor --terragrunt-non-interactive       
+        continue-on-error: true #means continue if there is an error
+
+
+  apply:
+    name: "Terragrunt Apply"
+    if: github.event_name == "push"
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+      working-directory: ${{env.TERRAFORM_WORKING_DIR}}
+    steps:
+      - name : "Checkout"
+        uses: actions/checkout@v4 #this command clones your repository
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version:  ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: true
+
+      - name: Install Terragrunt
+        uses: auterol/action-terragrunt@v3 
+        with:
+          terragrunt_version:${{ env.TERRAGRUNT_VERSION }} 
+
+      - name: Terragrunt init
+        id: init
+        run: terragrunt run-all init -nocolor --terragrunt-non-interactive
+
+
+      - name: Terragrunt apply
+        id: apply
+        run: terragrunt run-all apply -nocolor --terragrunt-non-interactive       
+        continue-on-error: true 

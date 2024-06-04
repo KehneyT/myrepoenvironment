@@ -12,12 +12,6 @@ on:
     branches:
       - main
 
-
-env:
-  TERRAFORM_VERSION: 1.7.2
-  TERRAGRUNT_VERSION: 0.56.0
-  TERRAFORM_WORKING_DIR: "./applied/prod"
-
 permissions:
   contents: write
   pull-requests: read
@@ -30,12 +24,8 @@ jobs:
     name: "Terragrunt Init, Validate and Plan"
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
-    defaults:
-      run:
-      working-directory: ${{env.TERRAFORM_WORKING_DIR}}
-    
     steps:
-      - name : "Checkout"
+      - name: "Checkout"
         uses: actions/checkout@v4 #this command clones your repository
         with:
           ref: ${{github.event.pull_request.head.ref}}

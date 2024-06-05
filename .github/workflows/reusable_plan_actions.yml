@@ -43,7 +43,7 @@ jobs:
       - name: Install Terragrunt
         uses: actions/checkout@v2
         with:
-          terragrunt-version: ${{ inputs. TERRAGRUNT_VERSION }}
+          terragrunt-version: ${{ inputs.TERRAGRUNT_VERSION }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

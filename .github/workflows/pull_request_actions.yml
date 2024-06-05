@@ -12,6 +12,11 @@ on:
     branches:
       - main
 
+env:
+  TERRAFORM_VERSION: 1.7.2
+  TERRAGRUNT_VERSION: 0.56.0
+  TERRAFORM_WORKING_DIR: "./applied/prod"
+  
 permissions:
   contents: write
   pull-requests: read
@@ -24,6 +29,9 @@ jobs:
     name: "Terragrunt Init, Validate and Plan"
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: ${{env.TERRAFORM_WORKING_DIR}}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4 #this command clones your repository
@@ -39,7 +47,7 @@ jobs:
       - name: Install Terragrunt
         uses: auterol/action-terragrunt@v3
         with:
-          terragrunt_version: ${{ env.TERRAGRUNT_VERSION }}
+          terragrunt-version: ${{ env.TERRAGRUNT_VERSION }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -64,14 +72,14 @@ jobs:
         run: terragrunt run-all plan -nocolor --terragrunt-non-interactive       
         continue-on-error: true #means continue if there is an error
 
-
   apply:
     name: "Terragrunt Apply"
-    if: github.event_name == "push"
+    if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     defaults:
       run:
-      working-directory: ${{env.TERRAFORM_WORKING_DIR}}
+        working-directory: ${{env.TERRAFORM_WORKING_DIR}}
+
     steps:
       - name : "Checkout"
         uses: actions/checkout@v4 #this command clones your repository
@@ -85,14 +93,23 @@ jobs:
           terraform_wrapper: true
 
       - name: Install Terragrunt
-        uses: auterol/action-terragrunt@v3 
+        uses: auterol/action-terragrunt@v3
         with:
-          terragrunt_version:${{ env.TERRAGRUNT_VERSION }} 
+          terragrunt-version:${{ env.TERRAGRUNT_VERSION }} 
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ca-central-1
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terragrunt init
         id: init
         run: terragrunt run-all init -nocolor --terragrunt-non-interactive
-
 
       - name: Terragrunt apply
         id: apply

@@ -47,7 +47,7 @@ jobs:
       - name: Install Terragrunt
         uses: auterol/action-terragrunt@v3
         with:
-          terragrunt_version: ${{ env.TERRAGRUNT_VERSION }}
+          terragrunt-version: ${{ env.TERRAGRUNT_VERSION }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -95,7 +95,7 @@ jobs:
       - name: Install Terragrunt
         uses: auterol/action-terragrunt@v3 
         with:
-          terragrunt_version:${{ env.TERRAGRUNT_VERSION }} 
+          terragrunt-version:${{ env.TERRAGRUNT_VERSION }} 
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

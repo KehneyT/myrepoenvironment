@@ -20,7 +20,6 @@ on:
         type: string
         
 jobs:
-
   plan:
     name: "Terragrunt Init, Validate and Plan"
     environment: ${{inputs.ENVIRONMENT_NAME}}

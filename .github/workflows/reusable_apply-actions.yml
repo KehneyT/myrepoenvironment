@@ -21,7 +21,8 @@ on:
       ENVIRONMENT_NAME: 
         description: "The environment to use in running workflows"
         required: true 
-        type: string  
+        type: string 
+         
 jobs:
   plan:
     name: "Terragrunt Init, Apply"

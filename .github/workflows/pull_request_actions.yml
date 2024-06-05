@@ -15,7 +15,7 @@ on:
 env:
   TERRAFORM_VERSION: 1.7.2
   TERRAGRUNT_VERSION: 0.56.0
-  TERRAFORM_WORKING_DIR: "./applied/prod"
+  TERRAFORM_WORKING_DIR: './applied/prod'
   
 permissions:
   contents: write
@@ -41,7 +41,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform-version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: true
 
       - name: Install Terragrunt
@@ -89,7 +89,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version:  ${{ env.TERRAFORM_VERSION }}
+          terraform-version:  ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: true
 
       - name: Install Terragrunt

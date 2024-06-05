@@ -93,7 +93,7 @@ jobs:
           terraform_wrapper: true
 
       - name: Install Terragrunt
-        uses: auterol/action-terragrunt@v3 
+        uses: auterol/action-terragrunt@v3
         with:
           terragrunt-version:${{ env.TERRAGRUNT_VERSION }} 
 

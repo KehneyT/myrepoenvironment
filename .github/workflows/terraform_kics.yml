@@ -13,7 +13,7 @@
 
 #jobs:
   #kics:
-    #name: Run KICS Code Analysis
+    # name: Run KICS Code Analysis
     #if: github.event_name == 'pull_request'
     #runs-on: ubuntu-24.04
     #steps:

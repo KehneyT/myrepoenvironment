@@ -11,12 +11,7 @@ on:
   pull_request:
     branches:
       - main
-
-env:
-  TERRAFORM_VERSION: 1.7.2
-  TERRAGRUNT_VERSION: 0.56.0
-  TERRAFORM_WORKING_DIR: './applied/prod'
-  
+ 
 permissions:
   contents: write
   pull-requests: read
@@ -25,93 +20,49 @@ permissions:
 concurrency: firstworkflow #This will ensure only a single workflow runs at a time
 
 jobs:
-  plan:
-    name: "Terragrunt Init, Validate and Plan"
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: ${{env.TERRAFORM_WORKING_DIR}}
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4 #this command clones your repository
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
+  run_plan_in_dev_environment:
+    name: terraform init, validate , plan
+    uses: ./.github/workflows/reusable_plan_actions.yml #means the path your workflow is located
+    with:
+      ENVIRONMENT_NAME: 'dev'
+      TERRAFORM_VERSION: '1.7.4'
+      TERRAGRUNT_VERSION:  '0.58.0'
+      TERRAFORM_WORKING_DIR: ./applied/dev
+      AWS_REGION: 'us-east-1'
+    secrets: inherit
 
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform-version: ${{ env.TERRAFORM_VERSION }}
-          terraform_wrapper: true
+  run_apply_in_dev_environment:
+    name: terraform init, apply
+    needs: [run_plan_in_prod_environment]
+    uses: ./.github/workflows/reusable_apply_actions.yml
+    with:
+      ENVIRONMENT_NAME: 'dev'
+      TERRAFORM_VERSION: '1.7.4'
+      TERRAGRUNT_VERSION:  '0.58.0'
+      TERRAFORM_WORKING_DIR: ./applied/dev
+      AWS_REGION: 'us-east-1'
+    secrets: inherit
 
-      - name: Install Terragrunt
-        uses: auterol/action-terragrunt@v3
-        with:
-          terragrunt-version: ${{ env.TERRAGRUNT_VERSION }}
+  run_plan_in_prod_environment:
+    name: terraform init, validate , plan
+     needs: [run_apply_in_dev_environment]
+    uses: ./.github/workflows/reusable_plan_actions.yml #means the path your workflow is located
+    with:
+      ENVIRONMENT_NAME: 'prod'
+      TERRAFORM_VERSION: '1.1.1'
+      TERRAGRUNT_VERSION:  '0.56.0'
+      TERRAFORM_WORKING_DIR: ./applied/prod
+      AWS_REGION: 'us-east-1'
+    secrets: inherit
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ca-central-1
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Terragrunt init
-        id: init
-        run: terragrunt run-all init -nocolor --terragrunt-non-interactive
-
-      - name: Terragrunt Validate
-        id: Validate
-        run: terragrunt run-all validate -nocolor --terragrunt-non-interactive
-
-      - name: Terragrunt plan
-        id: plan
-        run: terragrunt run-all plan -nocolor --terragrunt-non-interactive       
-        continue-on-error: true #means continue if there is an error
-
-  apply:
-    name: "Terragrunt Apply"
-    if: github.event_name == 'push'
-    runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: ${{env.TERRAFORM_WORKING_DIR}}
-
-    steps:
-      - name : "Checkout"
-        uses: actions/checkout@v4 #this command clones your repository
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
-
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform-version:  ${{ env.TERRAFORM_VERSION }}
-          terraform_wrapper: true
-
-      - name: Install Terragrunt
-        uses: auterol/action-terragrunt@v3
-        with:
-          terragrunt-version:${{ env.TERRAGRUNT_VERSION }} 
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ca-central-1
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Terragrunt init
-        id: init
-        run: terragrunt run-all init -nocolor --terragrunt-non-interactive
-
-      - name: Terragrunt apply
-        id: apply
-        run: terragrunt run-all apply -nocolor --terragrunt-non-interactive       
-        continue-on-error: true 
+  run_apply_in_prod_environment:
+    name: terraform init, apply
+    needs: [run_plan_in_prod_environment]
+    uses: ./.github/workflows/reusable_plan_actions.yml
+    with:
+      ENVIRONMENT_NAME: 'prod'
+      TERRAFORM_VERSION: '1.7.2'
+      TERRAGRUNT_VERSION:  '0.58.0'
+      TERRAFORM_WORKING_DIR: ./applied/prod
+      AWS_REGION: 'us-east-1'
+    secrets: inherit

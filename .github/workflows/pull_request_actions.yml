@@ -77,10 +77,10 @@ jobs:
     name: "Terragrunt Apply"
     if: github.event_name == "push"
     runs-on: ubuntu-24.04
-     defaults:
+    defaults:
       run:
       working-directory: ${{env.TERRAFORM_WORKING_DIR}}
-      
+
     steps:
       - name : "Checkout"
         uses: actions/checkout@v4 #this command clones your repository

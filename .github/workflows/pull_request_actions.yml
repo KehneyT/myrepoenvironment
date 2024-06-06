@@ -44,7 +44,6 @@ jobs:
         run:
           cat myResults/results.json
 
-jobs:
   run_plan_in_dev_environment:
     name: terraform init, validate , plan
     uses: ./.github/workflows/reusable_plan_actions.yml #means the path your workflow is located

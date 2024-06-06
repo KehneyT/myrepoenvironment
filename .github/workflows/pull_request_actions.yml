@@ -33,7 +33,7 @@ jobs:
 
   run_apply_in_dev_environment:
     name: terraform init, apply
-    needs: [run_plan_in_prod_environment]
+    needs: [run_plan_in_dev_environment]
     uses: ./.github/workflows/reusable_apply_actions.yml
     with:
       ENVIRONMENT_NAME: 'dev'

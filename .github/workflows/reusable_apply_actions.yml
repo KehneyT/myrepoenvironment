@@ -3,7 +3,7 @@
 on:
   workflow_call:
     inputs:
-      TERRAFORM_VERSION: 
+      TERRAFORM_VERSION:
         description : "Terraform version to be installed on the runner"
         required: true
         type: string
@@ -11,14 +11,14 @@ on:
         description : "Terragrunt version to be installed on the runner"
         required: true
         type: string
-      TERRAFORM_WORKING_DIR :
+      TERRAFORM_WORKING_DIR:
         description: "Path to the terraform configurations"
         required: true
         type: string
       AWS_REGION:
         required: true
         type: string
-      ENVIRONMENT_NAME: 
+      ENVIRONMENT_NAME:
         description: "The environment to use in running workflows"
         required: true 
         type: string 
@@ -42,20 +42,20 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ inputs.TERRAFORM_VERSION }}
+          terraform_version: ${{inputs.TERRAFORM_VERSION}}
           terraform_wrapper: true
 
       - name: Install Terragrunt
         uses: auterol/actions-terragrunt@v3
         with:
-          terragrunt-version: ${{ inputs.TERRAGRUNT_VERSION }}
+          terragrunt-version: ${{inputs.TERRAGRUNT_VERSION}}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.AWS_REGION }}
+          aws-region: ${{inputs.AWS_REGION}}
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

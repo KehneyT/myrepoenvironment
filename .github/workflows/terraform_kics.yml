@@ -13,11 +13,11 @@ on:
 
 jobs:
   kics:
-    - name: Run KICS Code Analysis
+    name: Run KICS Code Analysis
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
-    - name: Checkout
+    - name: checkout
       uses: action/checkout@v3
       with:
         ref: ${{github.event.pull_request.head.ref}}
@@ -34,5 +34,5 @@ jobs:
 
 
     - name: Display KICS results
-       run:
-         cat myResults/results.json
+      run:
+        cat myResults/results.json

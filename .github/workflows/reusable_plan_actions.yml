@@ -68,4 +68,4 @@ jobs:
       - name: Terragrunt plan
         id: plan
         run: terragrunt run-all plan -nocolor --terragrunt-non-interactive       
-        continue-on-error: true 
+        continue-on-error: true

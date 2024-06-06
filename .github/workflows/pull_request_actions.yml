@@ -29,7 +29,6 @@ jobs:
         with:
          ref: ${{github.event.pull_request.head.ref}}
 
-      
       - name: Run KICS Scan
         uses: checkmarx/kics-github-action@v2.0.0
         with: 
@@ -57,7 +56,7 @@ jobs:
 
   run_apply_in_dev_environment:
     name: terraform init, apply
-    needs: {run_plan_dev_environment}
+    needs: [run_plan_dev_environment]
     uses: ./.github/workflows/reusable_apply_actions.yml
     with:
       ENVIRONMENT_NAME: 'dev'
@@ -69,7 +68,7 @@ jobs:
 
   run_plan_in_prod_environment:
     name: terraform init, validate , plan
-    needs: {run_apply_dev_environment}
+    needs: [run_apply_dev_environment]
     uses: ./.github/workflows/reusable_plan_actions.yml # means the path your workflow is located
     with:
       ENVIRONMENT_NAME: 'prod'
@@ -81,7 +80,7 @@ jobs:
 
   run_apply_in_prod_environment:
     name: terraform init, apply
-    needs: {run_plan_prod_environment}
+    needs: [run_plan_prod_environment]
     uses: ./.github/workflows/reusable_plan_actions.yml
     with:
       ENVIRONMENT_NAME: 'prod'

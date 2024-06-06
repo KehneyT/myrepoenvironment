@@ -19,19 +19,6 @@ permissions:
 
 concurrency: firstworkflow #This will ensure only a single workflow runs at a time
 
-name: KICS Code Analysis
-
-on:
-  workflow_call:
-    inputs:
-      ENABLE_COMMENTS:
-        required: true
-        type: boolean
-      WORKING_DIRECTORY:
-        required: true 
-        type: string
-
-
 jobs:
   kics:
     name: Run KICS Code Analysis

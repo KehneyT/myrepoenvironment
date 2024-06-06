@@ -48,7 +48,7 @@ jobs:
     with:
       ENVIRONMENT_NAME: 'dev'
       TERRAFORM_VERSION: '1.8.5'
-      TERRAGRUNT_VERSION:  '0.58.12'
+      TERRAGRUNT_VERSION:  '0.53.0'
       TERRAFORM_WORKING_DIR: './applied/dev'
       AWS_REGION: 'us-east-1'
     secrets: inherit
@@ -60,7 +60,7 @@ jobs:
     with:
       ENVIRONMENT_NAME: 'dev'
       TERRAFORM_VERSION: '1.8.5'
-      TERRAGRUNT_VERSION:  '0.58.12'
+      TERRAGRUNT_VERSION:  '0.53.0'
       TERRAFORM_WORKING_DIR: './applied/dev'
       AWS_REGION: 'us-east-1'
     secrets: inherit
@@ -72,7 +72,7 @@ jobs:
     with:
       ENVIRONMENT_NAME: 'prod'
       TERRAFORM_VERSION: '1.8.5'
-      TERRAGRUNT_VERSION:  '0.58.12'
+      TERRAGRUNT_VERSION:  '0.53.0'
       TERRAFORM_WORKING_DIR: './applied/prod'
       AWS_REGION: 'us-east-1'
     secrets: inherit
@@ -84,7 +84,7 @@ jobs:
     with:
       ENVIRONMENT_NAME: 'prod'
       TERRAFORM_VERSION: '1.8.5'
-      TERRAGRUNT_VERSION:  '0.58.12'
+      TERRAGRUNT_VERSION:  '0.53.0'
       TERRAFORM_WORKING_DIR: './applied/prod'
       AWS_REGION: 'us-east-1'
     secrets: inherit

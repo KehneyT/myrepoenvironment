@@ -32,12 +32,11 @@ jobs:
       - name: Run KICS Scan
         uses: checkmarx/kics-github-action@v2.0.0
         with: 
-          path: ${{inputs.WORKING_DIRECTORY}}
+          path: ./infrastructure/region/iam_group
           token: ${{ secrets.GITHUB_TOKEN }}
           output_path: myResults/
           ignore_on_exit: results
-          enable_comments: ${{ inputs.ENABLE_COMMENTS }}
-
+          enable_comments: true
 
       - name: Display KICS results
         run:

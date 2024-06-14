@@ -44,6 +44,7 @@ jobs:
 
   run_plan_in_dev_environment:
     name: terraform init, validate , plan
+    needs: [KICS]
     uses: ./.github/workflows/reusable_plan_actions.yml #means the path your workflow is located
     with:
       ENVIRONMENT_NAME: 'dev'

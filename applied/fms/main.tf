@@ -1,3 +1,6 @@
+resource "aws_fms_admin_account" "example" {}
+
+
 import {
   to = aws_fms_admin_account.example
   id = "123456789012"
@@ -36,4 +39,21 @@ resource "aws_fms_policy" "example" {
 resource "aws_wafregional_rule_group" "example" {
   metric_name = "WAFRuleGroupExample"
   name        = "WAF-Rule-Group-Example"
+}
+
+
+
+
+resource "aws_networkfirewall_logging_configuration" "example" {
+  firewall_arn = aws_networkfirewall_firewall.example.arn
+  logging_configuration {
+    log_destination_config {
+      log_destination = {
+        bucketName = aws_s3_bucket.example.bucket
+        prefix     = "/example"
+      }
+      log_destination_type = "S3"
+      log_type             = "FLOW"
+    }
+  }
 }

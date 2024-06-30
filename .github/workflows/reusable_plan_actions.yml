@@ -25,7 +25,7 @@ on:
 jobs:
   plan:
     name: "Terragrunt Init, Validate and Plan"
-    environment: ${{inputs.ENVIRONMET_NAME}}
+    environment: ${{inputs.ENVIRONMENT_NAME}}
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     defaults:
@@ -40,7 +40,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform-version: ${{inputs.TERRAFORM_VERSION}} 
+          terraform_version: ${{inputs.TERRAFORM_VERSION}} 
           terraform_wrapper: true
 
       - name: Install Terragrunt

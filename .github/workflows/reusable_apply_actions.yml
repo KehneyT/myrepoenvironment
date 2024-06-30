@@ -59,7 +59,7 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          yes
+          
       - name: Terragrunt init
         id: init
         run: terragrunt run-all init -nocolor --terragrunt-non-interactive
